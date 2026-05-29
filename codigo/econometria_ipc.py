@@ -23,11 +23,12 @@ def cargar_datos():
     BASE_DIR = Path(__file__).resolve().parent
     DATA_DIR = BASE_DIR / "datos"
     data_path = DATA_DIR / "dato_posterIPC.csv"
-    df = pd.read_csv(data_path, header=0, names=['Fecha', 'Valor'], parse_dates=[0])
+    df = pd.read_csv(data_path, header=0, names=['Fecha', 'Valor'], parse_dates=['Fecha'])
+    df.set_index('Fecha', inplace=True)
     print(df.head())
     return df
 # %%==============================
-# índice de precios al consumidor
+# índice de precios al consumidor - USA
 # 3. Gráfico de la serie original
 
 def graficar_serie(df_ipc):
@@ -38,13 +39,14 @@ def graficar_serie(df_ipc):
     plt.plot(df_ipc.index, df_ipc['Valor'], label='Índice de Precios al Consumidor')
     plt.xlabel('Fecha')
     plt.ylabel('Valor')
-    plt.title('Serie Temporal del Índice de Precios al Consumidor')
+    plt.title('Serie Temporal del Índice de Precios al Consumidor - USA')
     plt.legend()
+    plt.xlim(df_ipc.index.min(), df_ipc.index.max())
     plt.savefig(BASE_DIR / "serie_original.png")  
     plt.close()  
 
 
-#  Gráficos ACF y PACF 
+#  Gráficos FAC y FACP de la serie original 
 def graficar_acf_pacf(serie, sufijo="", archivo="acf_pacf.png"):
     fig, axes = plt.subplots(1, 2, figsize=(15, 5))
     BASE_DIR = Path(__file__).resolve().parent
